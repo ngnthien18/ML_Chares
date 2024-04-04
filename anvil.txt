@@ -1,0 +1,42 @@
+from ._anvil_designer import Form1Template
+from anvil import *
+import anvil.server
+
+class Form1(Form1Template):
+  def __init__(self, **properties):
+    # Set Form properties and Data Bindings.
+    self.init_components(**properties)
+
+    # Any code you write here will run before the form opens.
+
+  def smoker_change(self, **event_args):
+    smoker=self.smoker.selected_value
+    if smoker == "Yes":
+      self.smokers = 1
+    else:
+      self.smokers = 0
+    pass
+
+  def region_change(self, **event_args):
+    region=self.region.selected_value
+    if region == "Northwest":
+        self.regions=1
+    elif region == "Southeast":
+        self.regions=2
+    elif region == "Southwest":
+        self.regions= 3
+    else:
+        self.regions=4
+    pass
+
+  def charges_click(self, **event_args):
+    charges = anvil.server.call('charges', 
+                                self.age.text,
+                                self.bmi.text,
+                                self.children.text,
+                                str(self.smokers),
+                                str(self.regions))
+    if charges:
+      self.charges_label.visible = True
+      self.charges_label.text = "The charges is " + str(charges)
+    pass
